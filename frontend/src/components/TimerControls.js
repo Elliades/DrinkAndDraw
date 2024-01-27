@@ -1,35 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { FaPlay, FaPause, FaSyncAlt } from 'react-icons/fa'; 
 
-const TimerControls = ({ duration, onTimerComplete }) => {
-  const [isRunning, setIsRunning] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(duration);
-
-  useEffect(() => {
-    let timer = null;
-    if (isRunning && timeLeft > 0) {
-      timer = setTimeout(() => {
-        setTimeLeft(timeLeft - 1);
-      }, 1000);
-    } else if (timeLeft === 0) {
-      onTimerComplete();
-      setIsRunning(false);
-    }
-    return () => clearTimeout(timer);
-  }, [isRunning, timeLeft]);
-
-  const handleStart = () => setIsRunning(true);
-  const handlePause = () => setIsRunning(false);
-  const handleReset = () => {
-    setIsRunning(false);
-    setTimeLeft(duration);
-  };
-
+const TimerControls = ({ isRunning, onStart, onPause, onReset }) => {
   return (
-    <div>
-      <button onClick={handleStart}>Play</button>
-      <button onClick={handlePause}>Pause</button>
-      <button onClick={handleReset}>Reset</button>
-      <div>Temps restant : {timeLeft}</div>
+    <div className="timer-controls">
+      {isRunning ? (
+        <FaPause onClick={onPause} className="icon" />
+      ) : (
+        <FaPlay onClick={onStart} className="icon" />
+      )}
+      <FaSyncAlt onClick={onReset} className="icon" />
     </div>
   );
 };

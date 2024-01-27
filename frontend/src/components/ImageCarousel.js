@@ -28,7 +28,7 @@ class ImageCarousel extends React.Component {
               <img src={img} alt={`Image ${idx}`} style={{ width: "100%", height: "auto" }} />
             </div>
           ))}
-        </Slider>
+        </Slider> 
       </div>
     );
   }

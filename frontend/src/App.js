@@ -2,17 +2,16 @@ import React, { useState, useEffect, useCallback } from 'react';
 import ImageDisplay from './components/ImageDisplay';
 import TimerSlider from './components/TimerSlider';
 import ImageCarousel from './components/ImageCarousel';
+import TimerControls from './components/TimerControls';
 
 function App() {
-  const [images, setImages] = useState([]); // Utilisez un tableau pour stocker l'historique des images
-  const [currentImage, setCurrentImage] = useState(''); // Image actuelle pour l'affichage
-  const [duration, setDuration] = useState(0);
+  const [images, setImages] = useState([]);
+  const [currentImage, setCurrentImage] = useState('');
+  const [duration, setDuration] = useState(30); // Valeur initiale du slider en secondes
+  const [timeLeft, setTimeLeft] = useState(duration);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
 
-  const handleDurationChange = (newDuration) => {
-    setDuration(newDuration);
-    // Ici, vous pouvez utiliser `newDuration` pour déclencher un timer
-  };
-
+  // Récupération des images
   const fetchNewImage = useCallback(() => {
     fetch('http://127.0.0.1:5000/api/random-image')
       .then(response => response.blob()) // Traiter la réponse comme un blob binaire
@@ -27,26 +26,80 @@ function App() {
 
   useEffect(() => {
     fetchNewImage();
-  }, [fetchNewImage]); // Dépendance ajoutée pour éviter l'exécution multiple
+  }, [fetchNewImage]);
+
+  // Timer logic
+  useEffect(() => {
+    let interval = null;
+    if (isTimerRunning && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      setIsTimerRunning(false);
+      fetchNewImage(); // Supposons que vous vouliez récupérer une nouvelle image lorsque le timer se termine
+    }
+    return () => clearInterval(interval);
+  }, [isTimerRunning, timeLeft]);
+
+  const handleStartTimer = () => {
+    if (!isTimerRunning) {
+      setIsTimerRunning(true);
+    }
+    if (timeLeft === 0) {
+      setTimeLeft(duration); // Seulement réinitialiser le temps restant si le timer a atteint 0
+    }
+  };
+  const handlePauseTimer = () => {
+    setIsTimerRunning(false);
+  };
+  
+  const handleResetTimer = () => {
+    setIsTimerRunning(false);
+    setTimeLeft(duration); // Réinitialiser le temps à la durée définie
+  };
+
+  function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    return [hours, minutes, remainingSeconds]
+      .map(unit => String(unit).padStart(2, '0')) // Ajoute 0 si nécessaire pour avoir 2 chiffres
+      .join(':');
+  }
+  
+  // Mise à jour de la durée du timer à partir du TimerSlider
+  const handleDurationChange = (newDuration) => {
+    setDuration(newDuration);
+    setTimeLeft(newDuration); // Réinitialise le temps restant si la durée est mise à jour
+  };
 
   return (
-    <div className="App" style={{ display: 'flex' }}>
-      <div style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.9)',
-        width: '250px',
-        height: '100vh',
-        padding: '20px',
-        boxSizing: 'border-box',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        color: 'white'
-      }}>
-        <TimerSlider onDurationChange={handleDurationChange} />
-        <button onClick={fetchNewImage}>Nouvelle Image</button>
-        <ImageCarousel images={images} />
+    <div className="App">
+      <div className="sidebar">
+      <div className="timer-display">
+          {timeLeft > 0 ? (
+            <h1 className='timer'>{formatTime(timeLeft)}</h1>
+          ) : (
+            <h1>Définir le Timer</h1>
+          )}
       </div>
-      <ImageDisplay imageUrl={currentImage} />
+      <div className="timer-controls-container">
+        <TimerSlider onDurationChange={handleDurationChange} />
+        <TimerControls
+          isRunning={isTimerRunning}
+          onStart={handleStartTimer}
+          onPause={handlePauseTimer}
+          onReset={handleResetTimer}
+        />
+      </div>
+      <ImageCarousel images={images} />
+      <button onClick={fetchNewImage}>Nouvelle Image</button>
+      </div>
+      <div className="main-content">
+        <ImageDisplay imageUrl={currentImage} />
+        {/* Reste du contenu principal */}
+      </div>
     </div>
   );
 }
