@@ -59,6 +59,15 @@ body {
   gap: 20px; /* Espace entre les boutons Play/Pause et Refresh */
   margin-top: 20px; /* Espace entre le slider et les boutons */
 }
+.blink {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
 
 
 .history{

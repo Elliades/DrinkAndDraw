@@ -10,6 +10,8 @@ function App() {
   const [duration, setDuration] = useState(30); // Valeur initiale du slider en secondes
   const [timeLeft, setTimeLeft] = useState(duration);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   
   //--------------------------- CAROUSEL -----------------------------------------------------
 // Fonction pour changer l'image principale
@@ -27,8 +29,11 @@ const handleImageChange = (newImage) => {
         // Créer une URL locale pour le blob de l'image
         const imageObjectURL = URL.createObjectURL(imageBlob);
         setCurrentImage(imageObjectURL); // Mettre à jour l'image actuelle pour l'affichage
-        setImages(prevImages => [...prevImages, imageObjectURL]); // Ajoutez au tableau pour l'historique
-      })
+        setImages(prevImages => {
+          const newImages = [...prevImages, imageObjectURL];
+          setCurrentImageIndex(newImages.length - 1);
+          return newImages;
+      });      })
       .catch(error => console.error('Error fetching image:', error));
   }, []);
 
@@ -103,8 +108,8 @@ const handleImageChange = (newImage) => {
           onReset={handleResetTimer}
         />
       </div>
-      <ImageCarousel images={images} onImageClick={handleImageChange} />
-      <button onClick={fetchNewImage}>Nouvelle Image</button>
+      <ImageCarousel images={images} currentImageIndex={currentImageIndex} onImageClick={handleImageChange} />
+      <button onClick={fetchNewImage}>New Ref</button>
       </div>
       <div className="main-content">
         <ImageDisplay imageUrl={currentImage} />
@@ -115,3 +120,4 @@ const handleImageChange = (newImage) => {
 }
 
 export default App;
+
