@@ -1,0 +1,14 @@
+Structure du dossier pour le volume OS
+Le numéro de série du volume est C0BA-8497
+C:.
+|   App.css
+|   App.js
+|   folder_structure.txt
+|   index.js
+|   
+\---components
+        ImageCarousel.js
+        ImageDisplay.js
+        TimerControls.js
+        TimerSlider.js
+        
