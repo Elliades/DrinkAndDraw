@@ -10,7 +10,15 @@ function App() {
   const [duration, setDuration] = useState(30); // Valeur initiale du slider en secondes
   const [timeLeft, setTimeLeft] = useState(duration);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  
+  //--------------------------- CAROUSEL -----------------------------------------------------
+// Fonction pour changer l'image principale
+const handleImageChange = (newImage) => {
+  setCurrentImage(newImage);
+};
 
+
+  //--------------------------- IMAGES -----------------------------------------------------
   // Récupération des images
   const fetchNewImage = useCallback(() => {
     fetch('http://127.0.0.1:5000/api/random-image')
@@ -42,6 +50,8 @@ function App() {
     return () => clearInterval(interval);
   }, [isTimerRunning, timeLeft]);
 
+
+  //--------------------------- TIMER -----------------------------------------------------
   const handleStartTimer = () => {
     if (!isTimerRunning) {
       setIsTimerRunning(true);
@@ -93,7 +103,7 @@ function App() {
           onReset={handleResetTimer}
         />
       </div>
-      <ImageCarousel images={images} />
+      <ImageCarousel images={images} onImageClick={handleImageChange} />
       <button onClick={fetchNewImage}>Nouvelle Image</button>
       </div>
       <div className="main-content">

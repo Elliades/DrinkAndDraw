@@ -62,30 +62,36 @@ body {
 
 
 .history{
-  width: 100px;
-  height: 100px;
+
   display: block;
-  margin-top: 100px;
 }
 
 .slick-track {
   margin: 0 auto; /* Centre le track si nécessaire */
 }
 
-.slick-slide {
-  /* Assurez-vous que les slides ne débordent pas du conteneur .slick-list */
-  width: 100%; /* ou une largeur spécifique qui convient à votre mise en page */
-  height: auto; /* pour maintenir le ratio de l'image */
+.slick-prev{
+  left: -30px;
 }
-
 .slick-slide img {
+  margin: 0;
+  margin-left: 10px;
   width: 100px;     
   height: 100px; 
   display: block;
-  margin: 0;
+  border-left: 5px solid #000000;
+  border-right: 5px solid #000000;
+  box-shadow: 5px rgba(0, 0, 0, 0.2); /* Ombre légère */
+  border-radius: 10px; /* Coins arrondis */
+  
+}
+.slick-slide img:hover {
+  transform: scale(1.05); /* Zoom léger */
+  border-color: #00aa3b; /* Changement de couleur de la bordure */
 }
 
 .slick-list {
-  /* Définissez une hauteur suffisante pour contenir les slides */
-  height: auto; /* ou une hauteur fixe basée sur la hauteur de vos images */
+    width: 130px;
+  height: 100px; /* ou une hauteur fixe basée sur la hauteur de vos images */
+  overflow: hidden;
 }
