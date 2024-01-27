@@ -1,5 +1,4 @@
 // components/ImageCarousel.js
-
 import React from 'react';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css"; 
@@ -21,14 +20,14 @@ class ImageCarousel extends React.Component {
     };
 
     return (
-      <div>
+      <div className="history">
         <Slider {...settings}>
-          {images.map((img, idx) => (
-            <div key={idx}>
-              <img src={img} alt={`Image ${idx}`} style={{ width: "100%", height: "auto" }} />
-            </div>
+          {images.map((image, index) => (
+          <div key={index} className="slide">
+            <img src={image} alt={`Image ${index}`} />
+          </div>
           ))}
-        </Slider> 
+        </Slider>
       </div>
     );
   }
